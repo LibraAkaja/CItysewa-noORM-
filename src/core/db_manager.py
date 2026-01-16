@@ -53,7 +53,13 @@ class SchemaManager:
 
 class Table(ABC):
     table_name = None
-    required_fields = []
+    required_fields = []    
+    read_only_fields = ['id', 'created_at', 'updated_at']
+    _attrs = {
+        "id": int,
+        "created_at": timezone,
+        "updated_at": timezone
+    }
     
     def __init__(self):
         pass
@@ -62,6 +68,12 @@ class Table(ABC):
     def abstract_method(self):
         '''This method is only mentioned to make this class abstract.'''
         pass
+    
+    def __setattr__(self, key, value):
+        if not isinstance(value, self._attrs[key]):
+            print("here")
+            raise TypeError(f"{key} must be {self._attrs[key].__name__}")
+        return super().__setattr__(key, value)
     
     def count(self):
         pass
@@ -95,20 +107,29 @@ class Table(ABC):
     def filter(self):
         pass
     
-    def create(self, values:dict):        
-        cols = ", ".join(list(values.keys()))
-        vals = tuple(values.values())
+    def create(self, **kwargs):
+        for key in self.required_fields:
+            if key not in kwargs.keys():
+                raise TypeError(f"Missing required field: {key}")
+        
+        for key, value in kwargs.items():
+            if key in self._attrs.keys() and key not in self.read_only_fields:
+                self.__setattr__(key, value)
+                
+        cols = ", ".join(list(self.__dict__.keys()))
+        vals = tuple(self.__dict__.values())
         placeholders = ", ".join(['%s' for _ in vals])
         
-        query = f"INSERT INTO {self.table_name} ({cols}) VALUES ({placeholders});"
-        
+        query = f"INSERT INTO {self.table_name} ({cols}) VALUES ({placeholders});"        
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query, vals)
             connection.commit()
-            return f"Record inserted successfully in the {self.table_name}."
+            print(f"Record inserted successfully in the {self.table_name}.")
+            return self
         except Exception as e:
-            return f"Error: {e}"
+            print(f"Error: {e}")
+            return
         
     def update(self):
         current_time = timezone.now()
