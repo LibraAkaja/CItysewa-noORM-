@@ -105,7 +105,7 @@ class Table(ABC):
                 cursor.execute(query, vals)
             connection.commit()
             print(f"Record inserted successfully in the {self.table_name}.")
-            return self
+            return self.get(**self.__dict__)
         except Exception as e:
             print(f"Error: {e}")
             return   

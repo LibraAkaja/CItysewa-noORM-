@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from django.contrib.auth import authenticate
 
 from .tables import (
     User,
@@ -7,10 +7,9 @@ from .tables import (
 )
 from .constants import (
     CUSTOMER_PROFILE_EXISTS,
-    PROVIDER_PROFILE_EXISTS
+    PROVIDER_PROFILE_EXISTS,
+    INVALID_PASSWORD
 )
-
-
 
 class CustomerRegisterSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
@@ -21,29 +20,30 @@ class CustomerRegisterSerializer(serializers.Serializer):
     
     def validate(self, attrs):
         email = attrs.get('email')
-        user = User().get({"email":email})
+        password = attrs.get('password')
+        user = User().get(email=email)
         if user:
-            user_id = user[0]
-            customer_profile = Customer().get({"id": user_id})
+            user_id = user.id
+            customer_profile = Customer().get(user_id=user_id)
             if customer_profile:
                 raise serializers.ValidationError({
                     "message": CUSTOMER_PROFILE_EXISTS
                 })
+            if not user.check_password(password):
+                raise serializers.ValidationError({"message": INVALID_PASSWORD})            
             
             attrs["user_id"] = user_id   
         
         return attrs
     
     def create(self, validated_data):
-        user_id = validated_data.get('user_id')
+        user_id = validated_data.pop('user_id', None)
         email = validated_data.pop('email', None)
         password = validated_data.pop('password', None)
         
         if not user_id:
-            values = {'email': email, 'password': password}
-            User().create(values=values)
-            user_id = User().get({"email":email})[0]
+            user = User().create(email=email, password=password)
+            user_id = user.id
           
-        Customer().create(validated_data)
-        return validated_data
+        return Customer().create(user_id=user_id, **validated_data).__dict__
         
