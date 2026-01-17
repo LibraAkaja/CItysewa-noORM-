@@ -86,7 +86,8 @@ class Table(ABC):
                 result = cursor.fetchall()
                 return result
         except Exception as e:
-            return f"Error: {e}"
+            print(f"Error: {e}")
+            return
             
     def get(self, **kwargs):
         if len(kwargs) == 0:
@@ -146,18 +147,26 @@ class Table(ABC):
     def update(self):
         current_time = timezone.now()
     
-    def delete(self, id:int):
-        query = f"DELETE FROM {self.table_name} WHERE id = %s"
+    def delete(self, **kwargs):
+        if len(kwargs) == 0:
+            print("Atleast a field is required for searching rows.")
+            return
+        
+        cols = [col for col in kwargs.keys() if col in self._attrs]
+        values = tuple(kwargs[col] for col in cols)
+        condition = " AND ".join([f'{col} = %s' for col in cols])
+        query = f"DELETE FROM {self.table_name} WHERE {condition};"
         
         try:
             with connection.cursor() as cursor:
-                cursor.execute(query, (id,))
+                cursor.execute(query, values)
+                rows_deleted = cursor.rowcount
             connection.commit()
-            return f"Record deleted successfully from the {self.table_name}."
+            print(f"{rows_deleted} records deleted from the {self.table_name}.")
         
         except Exception as e:
-            return f"Error: {e}"
-            
+            print(f"Error: {e}")
+        
 
 
 if __name__ == "__main__":
