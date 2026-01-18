@@ -6,10 +6,33 @@ from .tables import (
     Customer,
 )
 from .constants import (
+    USER_ALREADY_EXISTS,
     CUSTOMER_PROFILE_EXISTS,
     PROVIDER_PROFILE_EXISTS,
     INVALID_PASSWORD
 )
+
+class AdminRegisterSeriaizer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+    def validate(self, attrs):
+        email = attrs.get("email")
+        user = User().get(email=email)
+        if user:
+            raise serializers.ValidationError({
+                "message": USER_ALREADY_EXISTS
+            })
+            
+        return attrs
+    
+    def create(self, validated_data):
+        email = validated_data.pop('email', None)
+        password = validated_data.pop('password', None)
+        user = User().create(email=email, password=password, is_admin=True)
+        response = user.__dict__
+        response.pop("password")        
+        return user.__dict__
+        
 
 class CustomerRegisterSerializer(serializers.Serializer):
     email = serializers.EmailField(required=True)
@@ -45,5 +68,9 @@ class CustomerRegisterSerializer(serializers.Serializer):
             user = User().create(email=email, password=password)
             user_id = user.id
           
-        return Customer().create(user_id=user_id, **validated_data).__dict__
+        return {"email": email, **Customer().create(user_id=user_id, **validated_data).__dict__}
         
+        
+class CustomerListSerializer(serializers.Serializer):
+    ...
+    

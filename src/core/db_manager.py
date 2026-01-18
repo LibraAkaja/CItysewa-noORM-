@@ -27,7 +27,7 @@ class SchemaManager:
             print(f"Error: {e}")
             return False
     
-    def migrate(self, table_name, query):
+    def create_table(self, table_name, query):
         if not self.test_connection():
             print("Error: Couldn`t connect to the database.")
             return
@@ -61,6 +61,12 @@ class SchemaManager:
             print(f"Error: Unable to delete table. {e}")
             return
 
+# method for migrating tables to database
+def migrate():
+    manager = SchemaManager()
+    for table_name in table_queries.keys():
+        manager.create_table(table_name, table_queries[table_name])
+        
 
 class Table(ABC):
     table_name = None
@@ -205,4 +211,4 @@ class Table(ABC):
       
 
 if __name__ == "__main__":
-    print(SchemaManager().test_connection())   
+    migrate()   
