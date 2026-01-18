@@ -3,6 +3,7 @@ import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+APP_DIR = BASE_DIR / "src"
 
 env = environ.Env(DEBUG=(bool,False))
 environ.Env.read_env(BASE_DIR / ".env")
@@ -50,7 +51,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [str(APP_DIR / "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

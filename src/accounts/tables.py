@@ -68,5 +68,5 @@ class Customer(Table):
         return (f"Name: {self.first_name}")
 
 if __name__ == "__main__":
-    result = User().all()
+    result = User().count(email="awe@test.com", is_active=True)
     print(result)

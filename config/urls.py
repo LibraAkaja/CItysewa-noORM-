@@ -17,8 +17,17 @@ Including another URLconf
 
 # from django.contrib import admin
 from django.urls import path, include
+from rest_framework.views import APIView
+from django.shortcuts import render
+   
+def homepage(request):
+    context = {
+        "BASE_URL": "citysewa.onrender.com"
+    }
+    return render(request, 'index.html', context)
 
 urlpatterns = [
     # path("admin/", admin.site.urls),
+    path("", homepage, name="home-page"),
     path("api/v1/", include('src.api.urls'))
 ]

@@ -140,20 +140,29 @@ class Table(ABC):
             print(f"Error: {e}")
             return None
     
+    #R
     def filter(self):
         pass   
     
-    def count(self):
+    #R
+    def count(self, **kwargs):
         query = f"SELECT COUNT(*) FROM {self.table_name}"
+        cols = [col for col in kwargs.keys() if col in self._attrs]
+        values = ()
+        if cols:
+            condition = " AND ".join([f"{col} = %s" for col in cols])
+            values = tuple([kwargs[col] for col in cols])
+            query = f"{query} WHERE {condition}"
         try:
             with connection.cursor() as cursor:
-                cursor.execute(query)
+                cursor.execute(query, values)
                 total_rows = cursor.fetchone()[0]
                 return total_rows
         except Exception as e:
             print(f"Error: {e}")
             return
     
+    #R
     def all(self, order_by=None, order_type=0): # 0->ASC 1->DESC
         order_type_list = ["ASC", "DESC"]
         query = f"SELECT * FROM {self.table_name}"
@@ -174,11 +183,11 @@ class Table(ABC):
     
     #D
     def delete(self, **kwargs):
-        if len(kwargs) == 0:
-            print("Atleast a field is required for searching rows.")
-            return
-        
         cols = [col for col in kwargs.keys() if col in self._attrs]
+        if len(cols) == 0:
+            print("Atleast a field is required for searching rows.")
+            return       
+        
         values = tuple(kwargs[col] for col in cols)
         condition = " AND ".join([f'{col} = %s' for col in cols])
         query = f"DELETE FROM {self.table_name} WHERE {condition};"
@@ -192,6 +201,7 @@ class Table(ABC):
         
         except Exception as e:
             print(f"Error: {e}")
+            
       
 
 if __name__ == "__main__":
