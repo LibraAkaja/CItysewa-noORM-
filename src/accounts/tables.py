@@ -1,7 +1,37 @@
+import secrets
+
 from django.contrib.auth.hashers import make_password, check_password
 
 from src.core.db_manager import Table
 
+class Token(Table):
+    table_name = 'tokens'
+    _attrs = {
+        "user_id": int,
+        "token": str,        
+    }
+    required_fields = ["user_id", "token"]
+    
+    def __init__(self):
+        super().__init__()
+        self._attrs.update(super()._attrs)
+        
+    @staticmethod 
+    def abstract_method():
+        pass
+    
+    def create(self, user_id):
+        token = self.generate_token()
+        return super().create(user_id=user_id, token=token)
+        
+        
+    def generate_token(length=40):
+        """
+        1 byte = 2 hex-digits. So for 20 bytes, it would be equal to 40 hex digits.
+        """
+        nbytes = int(length/2)
+        return secrets.token_hex(nbytes)
+    
 
 class User(Table):
     table_name = 'users'
@@ -40,8 +70,6 @@ class User(Table):
         password = self.password
         return check_password(raw_password, password)
     
-    def __str__(self):
-        return (f"Table instance: {self.table_name}")
     
     
 class Customer(Table):
@@ -58,14 +86,11 @@ class Customer(Table):
     def __init__(self):
         super().__init__()
         self._attrs.update(super()._attrs)
-        self.first_name = 'No name'
        
     @staticmethod 
     def abstract_method():
         pass
         
-    def __str__(self):
-        return (f"Name: {self.first_name}")
 
 if __name__ == "__main__":
     result = User().count(email="awe@test.com", is_active=True)

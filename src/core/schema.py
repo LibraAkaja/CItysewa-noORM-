@@ -12,6 +12,20 @@ CREATE TABLE IF NOT EXISTS users (
 );
 """,
 
+    "tokens": """
+    CREATE TABLE IF NOT EXISTS tokens (
+	id SERIAL PRIMARY KEY,
+	user_id INT UNIQUE NOT NULL,
+	token VARCHAR(40) NOT NULL UNIQUE,
+	created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+	updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+	CONSTRAINT fk_token_user
+		FOREIGN KEY (user_id)
+		REFERENCES users(id)
+		ON DELETE CASCADE
+);
+""",
+
     "customers": """
 CREATE TABLE IF NOT EXISTS customers (
     id SERIAL PRIMARY KEY,

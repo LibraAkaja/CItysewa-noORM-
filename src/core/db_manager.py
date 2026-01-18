@@ -208,7 +208,8 @@ class Table(ABC):
         except Exception as e:
             print(f"Error: {e}")
             
-      
+    def __str__(self):
+        return (f"Table instance: {self.table_name}")
 
 if __name__ == "__main__":
     migrate()   
