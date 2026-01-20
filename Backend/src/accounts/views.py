@@ -5,6 +5,7 @@ from rest_framework.status import (
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
 )
+from drf_spectacular.utils import extend_schema
 
 from .tables import (
     Customer
@@ -52,14 +53,21 @@ class CustomerLoginAPIView(APIView):
             return Response(data, status=HTTP_200_OK)        
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
    
-    
+
+@extend_schema(
+    summary="List all customers",
+    description="Returns a lits of all customers",
+)   
 class CustomerListAPIView(APIView):
     def get(self, request):
         customers = Customer().all()
         serializer = CustomerSerializer(customers, many=True)        
         return Response(serializer.data, status=HTTP_200_OK) 
 
-   
+@extend_schema(
+    summary="Retrive a customer details",
+    description="Returns details of customer using their id.",
+)   
 class CustomerRetrieveAPIView(APIView):
     def get(self, request, id):
         customer = Customer().get(id=id)
