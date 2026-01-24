@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from .tables import (
     User,
     Customer,
+    Provider,
     Token,
 )
 from .constants import (
@@ -13,6 +14,7 @@ from .constants import (
     INVALID_PASSWORD,
     USER_NOT_FOUND,
     CUSTOMER_PROFILE_DOES_NOT_EXIST,
+    PROVIDER_PROFILE_DOES_NOT_EXIST,
     ADMIN_ACCESS_DENIED
 )
 
@@ -170,4 +172,88 @@ class CustomerSerializer(serializers.Serializer):
     gender = serializers.CharField()
 
     
+# Customer serializers
+# ----------------------------------------------------------------------------------------------------------
+
+class ProviderRegisterSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
+    gender = serializers.CharField(required=True)
+    
+    def validate(self, attrs):
+        email = attrs.get('email')
+        password = attrs.get('password')
+        user = User().get(email=email)
+        if user:
+            user_id = user.id
+            provider_profile = Provider().get(user_id=user_id)
+            if provider_profile:
+                raise serializers.ValidationError({
+                    "message": PROVIDER_PROFILE_EXISTS
+                })
+            if not user.check_password(password):
+                raise serializers.ValidationError({"message": INVALID_PASSWORD})            
+            
+            attrs["user_id"] = user_id   
         
+        return attrs
+    
+    def create(self, validated_data):
+        user_id = validated_data.pop('user_id', None)
+        email = validated_data.pop('email', None)
+        password = validated_data.pop('password', None)
+        
+        if not user_id:
+            user = User().create(email=email, password=password)
+            user_id = user.id
+          
+        return {"email": email, **Provider().create(user_id=user_id, **validated_data).__dict__}
+        
+        
+class ProviderLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+    
+    def validate(self, attrs):
+        email = attrs.get("email")
+        password = attrs.get("password")
+        user = User().get(email=email)
+        
+        if user:
+            provider_profile = Provider().get(user_id=user.id)
+            if provider_profile:
+                if not user.check_password(password):
+                    raise serializers.ValidationError({
+                        "message": INVALID_PASSWORD
+                    })
+            else:
+                raise serializers.ValidationError({
+                    "message": PROVIDER_PROFILE_DOES_NOT_EXIST
+                })
+                    
+        else:
+            raise serializers.ValidationError({
+                "message": USER_NOT_FOUND
+            })
+            
+        attrs["user_id"] = user.id
+        return attrs
+    
+    def create(self, validated_data):
+        user_id = validated_data.get("user_id")
+        token = Token().get(user_id=user_id)
+        
+        if not token:
+            token = Token().create(user_id=user_id)
+                    
+        provider = Provider().get(user_id=user_id)
+        return {**provider.__dict__, "token": token.token}
+        
+    
+class ProviderSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    first_name = serializers.CharField()
+    last_name = serializers.CharField()
+    gender = serializers.CharField()
