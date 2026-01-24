@@ -12,11 +12,11 @@ from drf_spectacular.views import (
 )  
 
 def homepage(request):
-    return redirect("api/docs")
+    return redirect("api/v1/docs")
 
 urlpatterns = [
     path("", homepage, name="home-page"),
     path("api/v1/", include('src.api.urls')),
-    path("api/schema", SpectacularAPIView.as_view(renderer_classes=[JSONRenderer]), name="schema"),
-    path("api/docs", SpectacularSwaggerView.as_view(url_name='schema'), name="swagger-ui")
+    path("api/v1/schema", SpectacularAPIView.as_view(renderer_classes=[JSONRenderer]), name="schema"),
+    path("api/v1/docs", SpectacularSwaggerView.as_view(url_name='schema'), name="swagger-ui")
 ]
