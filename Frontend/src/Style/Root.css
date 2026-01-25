@@ -33,7 +33,10 @@ body{
     /* border: 2px solid green; */
     display: flex;
     place-content: center;
-    background-color: #000000;
+    /* background-color: #000000; */
+    background: url(../assets/bgb.png) center no-repeat;
+    background-size: cover;
+    backdrop-filter: brightness(0.25);
     overflow-x: hidden;
     scroll-behavior: smooth;
 }
@@ -43,6 +46,6 @@ body{
     min-height: 100vh;
     display: flex;
     place-items: center;
-    /* border: 2px solid lightsalmon; */
+    border: 2px solid lightsalmon;
     overflow-x: hidden;
 }

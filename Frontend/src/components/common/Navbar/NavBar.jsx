@@ -1,7 +1,6 @@
 import publicMenu from './publicMenu';
 import customerMenu from './customerMenu';
 import providerMenu from './providerMenu';
-import adminMenu from './adminMenu';
 import { useAuth } from '../../../hooks/useAuth.jsx';
 import { Link } from 'react-router-dom';
 import CitysewaLogo from './../../../assets/cs.png';
