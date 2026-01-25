@@ -1,0 +1,170 @@
+.login-form, .login-admin-form{
+    width: 90vw; 
+    aspect-ratio: 2/3; 
+    padding: 25px 13px 25px 13px;
+    margin: 13px;
+    letter-spacing: 1px;
+    border: 2px solid #4C5FD5;
+    border-radius: 1rem;
+    display: flex;
+    color: rgba(255, 255, 255, 0.75);
+    background: rgba(76, 95, 213, 0.15);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.login-form fieldset, .login-admin-form fieldset{
+    width: 100%;
+    padding: 0px 13px 0 13px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-left: none;
+    border-right: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+
+.login-form fieldset legend, .login-admin-form fieldset legend{
+    width: 35%;
+    text-align: center;
+    font-Size: x-large;
+}
+
+.login-admin-form fieldset legend{
+    width: 70%;
+}
+
+.login-form fieldset span, .login-admin-form fieldset span{
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* border: 2px solid red; */
+}
+
+label{
+    font-size: larger;
+}
+
+input{
+    all: unset;
+    width: 100%;
+    margin-top: 8px;
+    border: 2px solid rgba(135, 206, 235, 0.5);
+    padding: 8px 13px 8px 13px;
+    box-sizing: border-box;
+    border-radius: 0.75rem;
+}
+
+input:focus{
+    border: 2px solid rgba(135, 206, 235, 0.75);
+    background: rgba(135, 206, 235, 0.05);
+}
+
+button{
+    all: unset;
+    border: 2px solid rgba(135, 206, 235, 0.75);
+    border-radius: 0.75rem;
+    padding: 8px 13px 8px 13px;
+    align-self: flex-end;
+    box-sizing: border-box;
+    align-self: center;
+    font-size: large;
+    cursor: pointer;
+}
+
+button:hover{
+    border: 2px solid rgba(135, 206, 235, 1);
+    background: rgba(135, 206, 235, 0.26);
+    color: white;
+}
+
+.login-as{
+    width: 90vw;
+    min-height: 50px;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 25px;
+}
+
+.login-as-op{
+    min-width: 40%;
+    height: 100%;
+    font-size: x-large;
+    display: flex;
+    justify-content: center;
+    border: 2px solid #4C5FD5;
+    border-radius: 1rem;
+    align-items: center;
+    text-align: center;
+    padding: 13px;
+    cursor: pointer;
+}
+
+@media only screen and (min-width: 321px){
+    .login-form, .login-admin-form{
+        aspect-ratio: 3/4;
+    }
+}
+
+@media only screen and (min-width: 375px){
+    .login-form, .login-admin-form{
+        aspect-ratio: 4/5;
+    }
+    .login-form fieldset legend, .login-as-op, .login-admin-form fieldset legend{
+        font-size: xx-large;
+    }
+    label{
+        font-size: x-large;
+    }
+    input{
+        font-size: larger;
+    }
+    button{
+        font-size: x-large;
+    }
+}
+
+@media only screen and (min-width: 426px){
+    .login-form, .login-admin-form{
+        width: 60vw;
+        max-height: 60vh;
+    }
+    .login-as{
+        width: 62vw;
+        min-height: 75px;
+        gap: 13px;
+    }
+    .login-as-op{
+        padding: 13px 20px 13px 20px;
+    }
+}
+
+@media only screen and (min-width: 768px){
+    .login-form, .login-admin-form{
+        width: 490px;
+        margin: 25px;
+        padding: 40px;
+    }
+    .login-form fieldset legend{
+        width: 31%;
+    }
+    .login-admin-form fieldset legend{
+        width: 47%;
+    }
+    .login-as{
+        width: 580px;
+        justify-content: space-between;
+    }
+}
+
+@media only screen and (min-width: 1212px){
+    .login-as-op{
+        aspect-ratio: 4/5;
+    }
+} 
+
