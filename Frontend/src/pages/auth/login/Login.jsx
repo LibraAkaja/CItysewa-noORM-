@@ -46,7 +46,7 @@ const Login = () => {
             </section>
             <form className='login-form' onSubmit={handleSubmit}>
             <fieldset>
-                <legend>Login</legend>
+                <legend>{def? "Customer": "Provider"} Login</legend>
                 {error && <p className='error'>{error}</p>}
                 <span>
                     <label htmlFor="username-email">Username/Email</label>
