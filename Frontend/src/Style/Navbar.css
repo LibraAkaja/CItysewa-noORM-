@@ -12,7 +12,7 @@ nav{
     overflow: hidden;
     transition: all 0.4s ease-in-out;
     /* background: rgba(128, 128, 128, 0.26); */
-    background: #222222;
+    background: #000000;
     position: fixed;
     top: 25px;
     z-index: 4;
@@ -178,6 +178,7 @@ nav.scrolled{
     nav{
         justify-content: space-around;
         padding: 13px 0px 13px 0px;
+        border-radius: 1rem 0.26rem 1rem 0.26rem;
     }
     h1{
         display: block !important;
