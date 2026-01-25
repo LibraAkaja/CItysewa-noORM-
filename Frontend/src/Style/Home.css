@@ -1,0 +1,16 @@
+.home{
+    margin-top: 29vh;
+    width: 100vw;
+    height: 50vh;
+    display: flex;
+    place-content: center !important;
+    /* border: 2px solid red; */
+}
+
+.hero{
+    /* border: 2px solid white; */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
