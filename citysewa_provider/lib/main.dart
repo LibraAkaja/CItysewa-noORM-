@@ -14,9 +14,36 @@ class RootApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      // theme: ThemeData(
-      //   colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      // ),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+        fontFamily: 'Inter',
+        inputDecorationTheme: InputDecorationTheme(
+          fillColor: Color(0xfffffefe),
+          hoverColor: Color(0xfffffefe),
+          filled: true,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 1, color: Colors.black45),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusColor: Colors.red,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 1.5, color: Colors.black),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.red,
+            minimumSize: Size.fromHeight(50),
+            textStyle: TextStyle(fontSize: 18),
+          ),
+        ),
+      ),
+
       home: LoginScreen(),
     );
   }

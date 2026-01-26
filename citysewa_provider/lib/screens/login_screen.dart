@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 
 import "package:citysewa_provider/widgets/widgets.dart" show AppLogo;
 import 'package:citysewa_provider/screens/signup_screen.dart' show SignupScreen;
+import 'package:citysewa_provider/screens/home_screen.dart' show HomeScreen;
 import 'package:citysewa_provider/api/api.dart' show AuthService;
 
 AuthService auth = AuthService();
@@ -28,7 +29,9 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 AppLogo(size: 50),
+                SizedBox(height: 10),
                 WelcomeText(),
+                SizedBox(height: 20),
                 LoginForm(),
                 SizedBox(height: 20),
                 Row(
@@ -67,15 +70,14 @@ class WelcomeText extends StatelessWidget {
   const WelcomeText({super.key});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
+    return SizedBox(
       child: Center(
         child: Column(
           children: [
-            Text("Welcome Back", style: TextStyle(fontSize: 20)),
+            Text("Welcome Back", style: TextStyle(fontSize: 16)),
             Text(
               "Login to continue",
-              style: TextStyle(fontSize: 16, color: Color(0xff6e6a6a)),
+              style: TextStyle(fontSize: 14, color: Color(0xff6e6a6a)),
             ),
           ],
         ),
@@ -103,6 +105,10 @@ class _LoginFormState extends State<LoginForm> {
     try {
       final result = await auth.login(email, password);
       print("result: $result");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
     } catch (e) {
       print("Error: $e");
     }
@@ -125,18 +131,7 @@ class _LoginFormState extends State<LoginForm> {
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
               hintText: "Email",
-              fillColor: Color(0xfffffefe),
-              hoverColor: Color(0xfffffefe),
-              filled: true,
               prefixIcon: Icon(Icons.email_outlined),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(width: 1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2),
-                borderRadius: BorderRadius.circular(10),
-              ),
             ),
           ),
           SizedBox(height: 20),
@@ -145,18 +140,8 @@ class _LoginFormState extends State<LoginForm> {
             obscureText: true,
             decoration: InputDecoration(
               hintText: "Password",
-              fillColor: Color(0xfffffefe),
-              hoverColor: Color(0xfffffefe),
-              filled: true,
+
               prefixIcon: Icon(Icons.lock_outline),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(width: 1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2),
-                borderRadius: BorderRadius.circular(10),
-              ),
             ),
           ),
           Container(
@@ -170,21 +155,15 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
+          SizedBox(
             width: double.infinity,
-            height: 40,
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              style: ElevatedButton.styleFrom(),
               child: isLoading
                   ? CircularProgressIndicator(color: Colors.white)
                   : const Text(
                       "Login",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
               onPressed: () {
                 final email = emailController.text.toString().trim();

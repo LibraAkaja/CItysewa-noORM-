@@ -25,8 +25,10 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                AppLogo(),
+                AppLogo(size: 50),
+                SizedBox(height: 10),
                 WelcomeText(),
+                SizedBox(height: 20),
                 SignupForm(),
                 const SizedBox(height: 20),
                 Row(
@@ -60,15 +62,14 @@ class WelcomeText extends StatelessWidget {
   const WelcomeText({super.key});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
+    return SizedBox(
       child: Center(
         child: Column(
           children: [
-            Text("Become a part of the family", style: TextStyle(fontSize: 20)),
+            Text("Become a part of the family", style: TextStyle(fontSize: 16)),
             Text(
-              "Services at your home",
-              style: TextStyle(fontSize: 16, color: Color(0xff6e6a6a)),
+              "Local Service, Made Simple",
+              style: TextStyle(fontSize: 14, color: Color(0xff6e6a6a)),
             ),
           ],
         ),
@@ -122,38 +123,17 @@ class _SignupFormState extends State<SignupForm> {
             keyboardType: TextInputType.name,
             decoration: InputDecoration(
               hintText: "First name",
-              fillColor: Color(0xfffffefe),
               prefixIcon: Icon(Icons.abc_rounded),
-              hoverColor: Color(0xfffffefe),
-              filled: true,
-              border: OutlineInputBorder(
-                borderSide: BorderSide(width: 1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2),
-                borderRadius: BorderRadius.circular(10),
-              ),
             ),
           ),
+
           SizedBox(height: 10),
           TextField(
             controller: lastNameController,
             keyboardType: TextInputType.name,
             decoration: InputDecoration(
               hintText: "Last name",
-              fillColor: Color(0xfffffefe),
-              hoverColor: Color(0xfffffefe),
-              filled: true,
               prefixIcon: Icon(Icons.abc),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(width: 1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2),
-                borderRadius: BorderRadius.circular(10),
-              ),
             ),
           ),
 
@@ -161,60 +141,29 @@ class _SignupFormState extends State<SignupForm> {
           TextField(
             controller: emailController,
             keyboardType: TextInputType.emailAddress,
-
             decoration: InputDecoration(
               hintText: "Email",
-              fillColor: Color(0xfffffefe),
-              hoverColor: Color(0xfffffefe),
-              filled: true,
               prefixIcon: Icon(Icons.email_outlined),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(width: 1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2),
-                borderRadius: BorderRadius.circular(10),
-              ),
             ),
           ),
+
           SizedBox(height: 10),
           TextField(
             controller: passController,
             obscureText: true,
             decoration: InputDecoration(
               hintText: "Password",
-              fillColor: Color(0xfffffefe),
-              hoverColor: Color(0xfffffefe),
-              filled: true,
               prefixIcon: Icon(Icons.lock_outline),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(width: 1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(width: 2),
-                borderRadius: BorderRadius.circular(10),
-              ),
             ),
           ),
+
           const SizedBox(height: 10),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10),
+          SizedBox(
             width: double.infinity,
-            height: 40,
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
               child: isLoading
                   ? CircularProgressIndicator(color: Colors.white)
-                  : Text(
-                      "Register",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                  : Text("Register"),
               onPressed: () {
                 final String firstName = firstNameController.text
                     .toString()
