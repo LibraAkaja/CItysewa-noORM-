@@ -1,6 +1,9 @@
 import "package:flutter/material.dart";
-import "package:shared_preferences/shared_preferences.dart"
-    show SharedPreferences;
+// import "package:shared_preferences/shared_preferences.dart"
+//     show SharedPreferences;
+
+import 'package:citysewa_provider/screens/profile_screen.dart'
+    show ProfileScreen;
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({super.key});
@@ -37,7 +40,12 @@ class ProfileIcon extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(8),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProfileScreen()),
+          );
+        },
         child: CircleAvatar(
           radius: 16,
           backgroundColor: Colors.white,
