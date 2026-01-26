@@ -34,29 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 20),
                 LoginForm(),
                 SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Dont`t have an account? ",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignupScreen(),
-                          ),
-                        );
-                      },
-                      child: Text(
-                        "Sign Up",
-                        style: TextStyle(color: Colors.red, fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
+                GoToSignup(),
               ],
             ),
           ),
@@ -105,10 +83,12 @@ class _LoginFormState extends State<LoginForm> {
     try {
       final result = await auth.login(email, password);
       print("result: $result");
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+      if (result != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      }
     } catch (e) {
       print("Error: $e");
     }
@@ -194,6 +174,32 @@ class _LoginFormState extends State<LoginForm> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class GoToSignup extends StatelessWidget {
+  GoToSignup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Dont`t have an account? ", style: TextStyle(fontSize: 16)),
+        InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SignupScreen()),
+            );
+          },
+          child: Text(
+            "Sign Up",
+            style: TextStyle(color: Colors.red, fontSize: 16),
+          ),
+        ),
+      ],
     );
   }
 }

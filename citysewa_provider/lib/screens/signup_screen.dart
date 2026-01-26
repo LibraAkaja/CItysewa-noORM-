@@ -31,24 +31,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 SizedBox(height: 20),
                 SignupForm(),
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Already have an account? ",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        "Login",
-                        style: TextStyle(color: Colors.red, fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
+                GoToLogin(),
               ],
             ),
           ),
@@ -101,6 +84,9 @@ class _SignupFormState extends State<SignupForm> {
     try {
       final result = await auth.register(fisrtName, lastName, email, password);
       print("result: $result");
+      if (result != null) {
+        Navigator.pop(context);
+      }
     } catch (e) {
       print(e);
     }
@@ -200,6 +186,29 @@ class _SignupFormState extends State<SignupForm> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class GoToLogin extends StatelessWidget {
+  GoToLogin({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Already have an account? ", style: TextStyle(fontSize: 16)),
+        InkWell(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            "Login",
+            style: TextStyle(color: Colors.red, fontSize: 16),
+          ),
+        ),
+      ],
     );
   }
 }
