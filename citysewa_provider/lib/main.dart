@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:citysewa_provider/screens/login_screen.dart' show LoginScreen;
+import 'package:citysewa_provider/screens/home_screen.dart' show HomeScreen;
 
 void main() {
   runApp(RootApp());
@@ -15,8 +16,13 @@ class RootApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         fontFamily: 'Inter',
+        appBarTheme: AppBarThemeData(
+          backgroundColor: Colors.deepOrange,
+          centerTitle: true,
+          toolbarHeight: kToolbarHeight,
+        ),
         inputDecorationTheme: InputDecorationTheme(
           fillColor: Color(0xfffffefe),
           hoverColor: Color(0xfffffefe),
@@ -44,7 +50,7 @@ class RootApp extends StatelessWidget {
         ),
       ),
 
-      home: LoginScreen(),
+      home: HomeScreen(),
     );
   }
 }
