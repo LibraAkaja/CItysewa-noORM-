@@ -40,8 +40,15 @@ class _HeaderState extends State<Header> {
     return Container(
       padding: EdgeInsets.all(5),
       decoration: BoxDecoration(
-        color: Colors.blueGrey,
-        borderRadius: BorderRadius.circular(10),
+        color: const Color.fromARGB(255, 185, 220, 246),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(30),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,12 +65,12 @@ class _HeaderState extends State<Header> {
               children: [
                 SizedBox(height: 5),
                 Text(
-                  "Mark Henry",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  "Ravi Kumar",
+                  style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 Text(
                   "Carpenter",
-                  style: TextStyle(fontSize: 14, color: Colors.white60),
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
                 ),
               ],
             ),

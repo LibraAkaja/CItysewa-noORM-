@@ -18,6 +18,7 @@ class RootApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         fontFamily: 'Inter',
+        textTheme: ThemeData.light().textTheme.apply(fontFamily: 'Inter'),
         appBarTheme: AppBarThemeData(
           backgroundColor: Colors.deepOrange,
           centerTitle: true,
@@ -49,7 +50,6 @@ class RootApp extends StatelessWidget {
           ),
         ),
       ),
-
       home: HomeScreen(),
     );
   }
