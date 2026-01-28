@@ -7,9 +7,6 @@ from django.db import connection
 
 from .schema import table_queries
 
-# os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-# django.setup()
-
 
 class SchemaManager:
     def test_connection(self):
@@ -132,14 +129,12 @@ class Table(ABC):
                 cursor.execute(query, values)
                 result = cursor.fetchone()
                 if result:
-                    res = list(result)
-                    self.id, self.created_at, self.updated_at = res.pop(0), res.pop(-2), res.pop(-1)
-                    keys = list(self._attrs.keys())
-                    keys.remove("id")
-                    for i,value in enumerate(res):
+                    columns = [col[0] for col in cursor.description]
+                    obj = self.__class__()
+                    for col,value in zip(columns, result):
                         if value is not None:
-                            self.__setattr__(keys[i], value)
-                    return self
+                            obj.__setattr__(col, value)
+                    return obj
                 return result
             
         except Exception as e:
@@ -190,9 +185,28 @@ class Table(ABC):
             return
         
     #U  
-    def update(self):
-        pass
-    
+    def update(self, **kwargs):
+        if kwargs.get("id") is None:
+            raise ValueError("Cannot update without ID")
+        
+        cols = [col for col in kwargs if col in self._attrs and col not in self.read_only_fields]
+        values = [kwargs[col] for col in cols]
+        
+        set_clause = ", ".join(f"{col} = %s" for col in cols)
+        query = f"UPDATE {self.table_name} SET {set_clause} WHERE id = %s"
+        
+        values.append(kwargs["id"])
+        
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute(query, values)
+            connection.commit()
+            print(f"Record updated successfully in the {self.table_name}.")
+              
+        except Exception as e:
+            print(f"Error: {e}")
+            
+                
     #D
     def delete(self, **kwargs):
         cols = [col for col in kwargs.keys() if col in self._attrs]
@@ -210,7 +224,7 @@ class Table(ABC):
                 rows_deleted = cursor.rowcount
             connection.commit()
             print(f"{rows_deleted} records deleted from the {self.table_name}.")
-        
+            
         except Exception as e:
             print(f"Error: {e}")
             
