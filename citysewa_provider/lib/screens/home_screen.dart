@@ -43,6 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
         bottomNavigationBar: BottomNavigationBar(
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(icon: Icon(Icons.book), label: "Bookings"),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.miscellaneous_services_rounded),
+              label: "Services",
+            ),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
           ],
         ),
@@ -88,7 +93,7 @@ class _BookingSectionState extends State<BookingSection> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFE3F2FD),
+        color: const Color.fromARGB(255, 212, 234, 249),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -127,10 +132,12 @@ class _BookingSectionState extends State<BookingSection> {
                 ),
               ),
 
-              BookingCard(
-                title: "Active",
-                value: 0,
-                titleIcon: Icons.auto_mode_outlined,
+              Expanded(
+                child: BookingCard(
+                  title: "Active",
+                  value: 0,
+                  titleIcon: Icons.auto_mode_outlined,
+                ),
               ),
             ],
           ),
@@ -184,14 +191,14 @@ class BookingCard extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Icon(titleIcon, size: 20, color: Colors.grey),
+                Icon(titleIcon, size: 16, color: Colors.grey),
               ],
             ),
             Text(
               "$value",
               style: TextStyle(
                 color: Colors.deepOrange,
-                fontSize: 34,
+                fontSize: 32,
                 fontWeight: FontWeight.w600,
               ),
             ),

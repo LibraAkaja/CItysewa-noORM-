@@ -49,6 +49,7 @@ class RootApp extends StatelessWidget {
             textStyle: TextStyle(fontSize: 18),
           ),
         ),
+        snackBarTheme: SnackBarThemeData(backgroundColor: Colors.deepOrange),
       ),
       home: HomeScreen(),
     );

@@ -14,7 +14,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(10),
-        child: Column(
+        child: ListView(
           children: [
             SizedBox(height: 10),
             Header(),
@@ -81,8 +81,21 @@ class _HeaderState extends State<Header> {
   }
 }
 
-class VerificationForm extends StatelessWidget {
+class VerificationForm extends StatefulWidget {
   VerificationForm({super.key});
+
+  @override
+  State<VerificationForm> createState() => _VerificationFormState();
+}
+
+class _VerificationFormState extends State<VerificationForm> {
+  List<String> documentType = [
+    'Citizenship',
+    'Driving Liscense',
+    'Voter ID',
+    'National ID',
+  ];
+  String selectedDocumentType = 'Citizenship';
 
   @override
   Widget build(BuildContext context) {
@@ -105,12 +118,32 @@ class VerificationForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Verify yourself", style: TextStyle(fontSize: 16)),
-          TextField(decoration: InputDecoration(hintText: 'Phone Number')),
           TextField(
-            decoration: InputDecoration(
-              hintText: 'Document number (eg: citizenship, liscense)',
-            ),
+            keyboardType: TextInputType.phone,
+            decoration: InputDecoration(hintText: 'Phone Number'),
           ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return DropdownMenuFormField<String>(
+                hintText: 'Select a document type',
+                width: double.infinity,
+                menuStyle: MenuStyle(
+                  minimumSize: WidgetStateProperty.all(
+                    Size(constraints.maxWidth, 0),
+                  ),
+                  maximumSize: WidgetStateProperty.all(
+                    Size(constraints.maxWidth, 400),
+                  ),
+                ),
+                dropdownMenuEntries: documentType.map(buildMenuItem).toList(),
+                onSelected: (value) {
+                  setState(() => selectedDocumentType = value!);
+                },
+              );
+            },
+          ),
+
+          TextField(decoration: InputDecoration(hintText: 'Document number')),
           Wrap(
             spacing: 10,
             runSpacing: 10,
@@ -131,4 +164,7 @@ class VerificationForm extends StatelessWidget {
       ),
     );
   }
+
+  DropdownMenuEntry<String> buildMenuItem(String item) =>
+      DropdownMenuEntry(value: item, label: item);
 }
