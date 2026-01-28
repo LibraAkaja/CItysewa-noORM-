@@ -153,6 +153,7 @@ class CustomerLoginSerializer(serializers.Serializer):
             })
             
         attrs["user_id"] = user.id
+        attrs["customer"] = customer_profile
         return attrs
     
     def create(self, validated_data):
@@ -162,7 +163,7 @@ class CustomerLoginSerializer(serializers.Serializer):
         if not token:
             token = Token().create(user_id=user_id)
                     
-        customer = Customer().get(user_id=user_id)
+        customer = validated_data.get("customer")
         return {**customer.__dict__, "token": token.token}
         
     
@@ -240,6 +241,7 @@ class ProviderLoginSerializer(serializers.Serializer):
             })
             
         attrs["user_id"] = user.id
+        attrs["provider"] = provider_profile
         return attrs
     
     def create(self, validated_data):
@@ -249,7 +251,7 @@ class ProviderLoginSerializer(serializers.Serializer):
         if not token:
             token = Token().create(user_id=user_id)
                     
-        provider = Provider().get(user_id=user_id)
+        provider = validated_data.get("provider")
         return {**provider.__dict__, "token": token.token}
         
     
