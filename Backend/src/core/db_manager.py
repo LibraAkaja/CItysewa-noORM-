@@ -216,4 +216,4 @@ class Table(ABC):
         return (f"Table instance: {self.table_name}")
 
 if __name__ == "__main__":
-    migrate()   
+    migrate()

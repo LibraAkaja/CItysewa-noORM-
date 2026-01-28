@@ -110,6 +110,25 @@ class Provider(Table):
     @staticmethod 
     def abstract_method():
         pass
+    
+class Documents(Table):
+    table_name = 'documents'
+    _attrs = {
+        "provider_id": int,
+        "document_type": str,
+        "document_number": str,
+        "file_url": str,
+        "status": str,
+    }
+    required_fields = ['provider_id', 'document_type', 'document_number', 'file_url', 'status']
+    
+    def __init__(self):
+        super().__init__()
+        self._attrs.update(super()._attrs)
+       
+    @staticmethod 
+    def abstract_method():
+        pass
         
 
 if __name__ == "__main__":

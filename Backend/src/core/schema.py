@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS documents (
     document_type VARCHAR(30) NOT NULL,
     document_number VARCHAR(50) NOT NULL UNIQUE,
     file_url VARCHAR(255) NOT NULL UNIQUE,
+	status VARCHAR(20) NOT NULL DEFAULT 'Pending',
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     CONSTRAINT fk_documents_provider

@@ -2,7 +2,6 @@
 URL configuration for config project.
 """
 
-# from django.contrib import admin
 from django.urls import path, include
 from rest_framework.renderers import JSONRenderer
 from django.shortcuts import redirect
@@ -12,7 +11,7 @@ from drf_spectacular.views import (
 )  
 
 def homepage(request):
-    return redirect("api/v1/docs")
+    return redirect("swagger-ui")
 
 urlpatterns = [
     path("", homepage, name="home-page"),

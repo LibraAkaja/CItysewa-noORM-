@@ -3,9 +3,10 @@ from django.contrib.auth import authenticate
 
 from .tables import (
     User,
+    Token,
     Customer,
     Provider,
-    Token,
+    Documents,
 )
 from .constants import (
     USER_ALREADY_EXISTS,
@@ -172,7 +173,7 @@ class CustomerSerializer(serializers.Serializer):
     gender = serializers.CharField()
 
     
-# Customer serializers
+# Provider serializers
 # ----------------------------------------------------------------------------------------------------------
 
 class ProviderRegisterSerializer(serializers.Serializer):
@@ -257,3 +258,25 @@ class ProviderSerializer(serializers.Serializer):
     first_name = serializers.CharField()
     last_name = serializers.CharField()
     gender = serializers.CharField()
+    
+class DocumentSerializer(serializers.Serializer):
+    provider_id = serializers.IntegerField(required=True)
+    document_number = serializers.CharField(required=True)
+    document_type = serializers.CharField(required=True)
+    file = serializers.ImageField(required=True)
+    
+class ProviderVerificationSerializer(serializers.Serializer):
+    provider_id = serializers.IntegerField(required=True)
+    user_id = serializers.IntegerField(required=True)
+    phone_number = serializers.CharField(required=True)
+    document_type = serializers.CharField(required=True)
+    document_number = serializers.CharField(required=True)
+    profile_photo = serializers.ImageField(required=True)
+    file = serializers.ImageField(required=True)
+    
+    def validate(self, attrs):
+        ...
+        
+    def create(self, validated_data):
+        ...
+    
