@@ -76,9 +76,7 @@ class User(Table):
     
     def check_password(self, raw_password):
         password = self.password
-        return check_password(raw_password, password)
-    
-    
+        return check_password(raw_password, password)   
     
 class Customer(Table):
     table_name = 'customers'
@@ -109,7 +107,11 @@ class Customer(Table):
             return file_name
         else:
             raise ValueError("Id missing for this instance.") 
-        
+    
+    def delete_photo(self):
+        if hasattr(self, "photo"):
+            Storage().delete_file(bucket="customer", folder=f"photos/{self.id}", file_name=self.photo)
+            
 class Provider(Table):
     table_name = 'providers'
     _attrs = {
