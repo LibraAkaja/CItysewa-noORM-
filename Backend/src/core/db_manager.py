@@ -1,12 +1,9 @@
-# import os
 import datetime
 from abc import ABC, abstractmethod
 
-# import django
 from django.db import connection
 
 from .schema import table_queries
-
 
 class SchemaManager:
     def test_connection(self):
