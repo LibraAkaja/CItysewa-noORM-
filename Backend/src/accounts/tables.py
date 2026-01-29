@@ -1,8 +1,9 @@
 import secrets
-
+import uuid
 from django.contrib.auth.hashers import make_password, check_password
 
 from src.core.db_manager import Table
+from src.utils.storage import upload_file
 
 class Token(Table):
     table_name = 'tokens'
@@ -61,6 +62,14 @@ class User(Table):
         kwargs["password"] = password_hash
         return super().create(**kwargs)
     
+    def update(self, **kwargs):
+        if "password" in kwargs:
+            raw_password = kwargs.pop("password")
+            password_hash = self.set_password(raw_password)
+            kwargs["password"] = password_hash
+            
+        return super().update(**kwargs)
+    
     def set_password(self, password):
         self.password = make_password(password)
         return self.password
@@ -78,7 +87,7 @@ class Customer(Table):
         "first_name": str,
         "last_name": str,
         "gender": str,
-        "photo_url": str
+        "photo": str
     }
     required_fields = ['user_id']
     
@@ -90,6 +99,17 @@ class Customer(Table):
     def abstract_method():
         pass
     
+    def upload_photo(self, file):
+        if hasattr(self, "id"): 
+            file_name = upload_file(
+                bucket="customer", 
+                folder=f"photos/{self.id}",
+                file=file
+            )
+            return file_name
+        else:
+            raise ValueError("Id missing for this instance.") 
+        
 class Provider(Table):
     table_name = 'providers'
     _attrs = {
@@ -98,7 +118,7 @@ class Provider(Table):
         "last_name": str,
         "gender": str,
         "description": str,
-        "photo_url": str,
+        "photo": str,
         "verified": bool
     }
     required_fields = ['user_id']
@@ -111,16 +131,38 @@ class Provider(Table):
     def abstract_method():
         pass
     
-class Documents(Table):
+    def upload_document(self, file):
+        if hasattr(self, "id"): 
+            file_name = upload_file(
+                bucket="provider", 
+                folder=f"documents/{self.id}",
+                file=file
+            )
+            return file_name
+        else:
+            raise  ValueError("Id missing for this instance.") 
+    
+    def upload_photo(self, file):
+        if hasattr(self, "id"): 
+            file_name = upload_file(
+                bucket="provider", 
+                folder=f"photos/{self.id}",
+                file=file
+            )
+            return file_name
+        else:
+            raise ValueError("Id missing for this instance.") 
+        
+class Document(Table):
     table_name = 'documents'
     _attrs = {
         "provider_id": int,
         "document_type": str,
         "document_number": str,
-        "file_url": str,
+        "file_name": str,
         "status": str,
     }
-    required_fields = ['provider_id', 'document_type', 'document_number', 'file_url', 'status']
+    required_fields = ['provider_id', 'document_type', 'document_number', 'file_name']
     
     def __init__(self):
         super().__init__()

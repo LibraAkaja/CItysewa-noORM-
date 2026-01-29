@@ -97,6 +97,14 @@ else:
         }
     }
 
+# Supabase S3 bucket
+USE_S3=env.bool("USE_S3", False)
+SUPABASE_S3_ACCESS_KEY_ID=env("SUPABASE_S3_ACCESS_KEY_ID")
+SUPABASE_S3_SECRET_ACCESS_KEY = env("SUPABASE_S3_SECRET_ACCESS_KEY")
+SUPABASE_S3_CUSTOMER_BUCKET_NAME = env("SUPABASE_S3_CUSTOMER_BUCKET_NAME")
+SUPABASE_S3_PROVIDER_BUCKET_NAME = env("SUPABASE_S3_PROVIDER_BUCKET_NAME")
+SUPABASE_S3_REGION_NAME = env("SUPABASE_S3_REGION_NAME")
+SUPABASE_S3_ENDPOINT_URL = env("SUPABASE_S3_ENDPOINT_URL")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -117,9 +125,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -128,14 +133,7 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
 STATIC_URL = "static/"
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

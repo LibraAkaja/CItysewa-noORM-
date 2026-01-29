@@ -4,6 +4,7 @@ from rest_framework.status import (
     HTTP_200_OK, 
     HTTP_400_BAD_REQUEST,
     HTTP_404_NOT_FOUND,
+    HTTP_500_INTERNAL_SERVER_ERROR
 )
 from drf_spectacular.utils import extend_schema
 
@@ -13,22 +14,24 @@ from .tables import (
 )
 
 from .serializers import (
-    AdminRegisterSeriaizer,
+    UserRegisterSeriaizer,
     AdminLoginSerializer,
     CustomerRegisterSerializer,
     CustomerLoginSerializer,
     CustomerSerializer,
     ProviderRegisterSerializer,
     ProviderLoginSerializer,
-    ProviderSerializer
+    ProviderSerializer,
+    ProviderVerificationSerializer,
 )
+from src.utils.storage import upload_file
 
 # Admin views
 # -----------------------------------------------------------------------------------------
 
 class AdminRegisterAPIView(APIView):
     def post(self, request):
-        serializer = AdminRegisterSeriaizer(data=request.data)
+        serializer = UserRegisterSeriaizer(data=request.data)
         if serializer.is_valid():
             data = serializer.save()
             return Response(data, status=HTTP_200_OK)
@@ -134,3 +137,14 @@ class ProviderRetrieveAPIView(APIView):
             return Response(serializer.data, status=HTTP_200_OK)
                      
         return Response({"detail": "Not found"}, status=HTTP_404_NOT_FOUND)
+    
+    
+class ProviderVerificationAPIView(APIView):
+    def post(self, request):
+        serializer = ProviderVerificationSerializer(data=request.data)
+        if serializer.is_valid():
+            data = serializer.save()
+            return Response(data=data, status=HTTP_200_OK)
+            
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+        

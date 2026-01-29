@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS customers (
 	first_name VARCHAR(50),
 	last_name VARCHAR(50),
 	gender VARCHAR(10),
-	photo_url VARCHAR(255),
+	photo TEXT,
 	created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 	updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 	CONSTRAINT fk_customers_user
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS providers (
 	last_name VARCHAR(50),
 	gender VARCHAR(10),
 	description VARCHAR(500),
-	photo_url VARCHAR(255) UNIQUE,
+	photo TEXT UNIQUE,
 	verified BOOLEAN DEFAULT FALSE,
 	created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 	updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
@@ -55,10 +55,10 @@ CREATE TABLE IF NOT EXISTS providers (
 
 CREATE TABLE IF NOT EXISTS documents (
 	id SERIAL PRIMARY KEY,
-	provider_id INT NOT NULL UNIQUE,
+	provider_id INT NOT NULL,
 	document_type VARCHAR(30) NOT NULL,
 	document_number VARCHAR(50) NOT NULL UNIQUE,
-	file_url VARCHAR(255) NOT NULL UNIQUE,
+	file_name TEXT NOT NULL,
 	status VARCHAR(20) NOT NULL DEFAULT 'Pending',
 	created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 	updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
