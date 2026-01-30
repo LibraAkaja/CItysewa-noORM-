@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
     const [formData, setFormData] = useState({
         email: "",
-        // username: "",
+        first_name: "",
+        last_name: "",
+        gender: "",
         password: "",
         confirmPassword: "",
         role: "",
@@ -31,22 +33,37 @@ const Register = () => {
             return;
         }
         try{
-            if(formData.role !== "Admin" && formData.role === "Provider"){
+            if(formData.role === "Provider"){
                 await providerRegister({
                     email: formData.email,
                     password: formData.password,
+                    first_name: formData.first_name,
+                    last_name: formData.last_name,
+                    gender: formData.gender
                 });
             }
-            if(formData.role !== "Admin" && formData.role === "Customer"){
+            if(formData.role === "Customer"){
                 await customerRegister({
                     email: formData.email,
                     password: formData.password,
+                    first_name: formData.first_name,
+                    last_name: formData.last_name,
+                    gender: formData.gender
                 });
             }
             setSucceess(`${formData.role} Registration Successful!`);
             navigate("/login");
         } catch (err) {
             setError(err.response?.data?.detail || "Registration Failed!");
+            setFormData({
+                email: "",
+                first_name: "",
+                last_name: "",
+                gender: "",
+                password: "",
+                confirmPassword: "",
+                role: ""
+            });
         }
     };
     return(
@@ -62,12 +79,29 @@ const Register = () => {
                 <span>
                     <span>
                         <label htmlFor="reg-fname">First Name</label>
-                        <input type="text" id="reg-fname" name="first_name" required/>
+                        <input type="text" id="reg-fname" name="first_name" value={formData.first_name} onChange={handleChange} required/>
                     </span>
                     <span>
                         <label htmlFor="reg-lname">Last Name</label>
-                        <input type="text" id="reg-lname" name="last_name" required/>
+                        <input type="text" id="reg-lname" name="last_name" value={formData.last_name} onChange={handleChange} required/>
                     </span>
+                </span>
+                <span>
+                    <label>Gender</label>
+                    <select className="select-gender" name="gender" value={formData.gender} onChange={handleChange} required>
+                        <option value={""} disabled hidden>Choose your gender</option>
+                        <option value={"Female"}>Female</option>
+                        <option value={"Male"}>Male</option>
+                        <option value={"Others"}>Others</option>
+                    </select>
+                </span>
+                <span>
+                    <label htmlFor="select-role">Your Role</label>
+                    <select className="select-role" id="select-role" name="role" value={formData.role} onChange={handleChange} required>
+                        <option value={""} disabled hidden>Choose an option</option>
+                        <option value={"Customer"}>Customer</option>
+                        <option value={"Provider"}>Provider</option>
+                    </select>
                 </span>
                 <span>
                     <label htmlFor="reg-pass">Password</label>
@@ -76,14 +110,6 @@ const Register = () => {
                 <span>
                     <label htmlFor="reg-confirm-pass">Confirm Password</label>
                     <input type="password" id="reg-confirm-pass" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required/>
-                </span>
-                <span>
-                    <label htmlFor="select-role">Your Role</label>
-                    <select className="select-role" id="select-role" name="role" value={formData.role} onChange={handleChange}>
-                        <option value={""} disabled hidden>Choose an option</option>
-                        <option value={"Customer"}>Customer</option>
-                        <option value={"Provider"}>Provider</option>
-                    </select>
                 </span>
                 <button type="submit">Register</button>
             </fieldset>

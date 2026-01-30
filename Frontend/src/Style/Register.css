@@ -73,7 +73,7 @@ input:focus{
     background: rgba(135, 206, 235, 0.05);
 }
 
-.register-form fieldset span:nth-of-type(5){
+.register-form fieldset span:nth-of-type(3), .register-form fieldset span:nth-of-type(4){
     flex-direction: row;
     gap: 25px;
 }
