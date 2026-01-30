@@ -1,31 +1,3 @@
-// import axios from 'axios';
-
-// // Base axios instance
-// const api = axios.create({
-//     baseURL: 'http://localhost:8000/api', //Backend url
-//     headers: {
-//         'Content-Type': 'application/json',
-//     },
-// });
-
-// //Accounts
-// export const loginUser = (data) => api.post('/accounts/login/', data);
-// export const registerUser = (data) => api.post('/accounts/register/', data);
-
-// //Bookings
-// export const fetchBookings = () => api.get('/bookings/');
-// export const createBooking = (data) => api.post('/bookings/', data);
-
-// //Services
-// export const fetchServices = () => api.get('/services/');
-// export const createServices = (data) => api.post('/services/', data);
-
-// //Addresses
-// export const fetchAddresses = () => api.get('/addresses/');
-// export const createAddress = (data) => api.post('/addresses/', data);
-
-// export default api;
-
 import axios from 'axios';
 
 // Base axios instance
