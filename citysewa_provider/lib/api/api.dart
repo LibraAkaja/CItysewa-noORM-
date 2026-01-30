@@ -3,8 +3,8 @@ import "package:http/http.dart" as http;
 
 import "package:citysewa_provider/api/models.dart";
 
-const baseUrl = "https://citysewa2.onrender.com/api/v1";
-// const baseUrl = "http://127.0.0.1:8000/api/v1";
+// const baseUrl = "https://citysewa2.onrender.com/api/v1";
+const baseUrl = "http://192.168.1.107:8000/api/v1";
 
 String parseErrorMessage(dynamic error) {
   if (error is Map) {
@@ -31,7 +31,6 @@ class AuthService {
     final url = Uri.parse("$baseUrl/$modUrl/login");
     try {
       final response = await http.post(url, body: body);
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         return LoginResponse(
@@ -119,25 +118,19 @@ class AuthService {
       request.fields['document_number'] = docNumber;
       request.fields['document_type'] = docType;
 
-      print("photo:$photoPath");
       request.files.add(await http.MultipartFile.fromPath('photo', photoPath));
       request.files.add(await http.MultipartFile.fromPath('document', docPath));
 
       final responseStream = await request.send();
       final response = await http.Response.fromStream(responseStream);
-      print("API11111111111111111111111111111111111111");
+
       if (response.statusCode == 200) {
         // final data = jsonDecode(response.body);
-        print("API2222222222222222222222222222222");
         return VerificationResponse(
           success: true,
-          message: "Verification successful",
+          message: "Verification form submitted successfully.",
         );
       } else {
-        print(response.statusCode);
-        print("API33333333333333333333333333333");
-        print(response.body);
-        print("API444444444444444444444444444444");
         final data = jsonDecode(response.body);
         return VerificationResponse(
           success: false,

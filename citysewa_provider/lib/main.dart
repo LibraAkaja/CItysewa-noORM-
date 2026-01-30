@@ -5,6 +5,8 @@ import 'package:citysewa_provider/screens/signup_screen.dart' show SignupScreen;
 import 'package:citysewa_provider/screens/home_screen.dart' show HomeScreen;
 import 'package:citysewa_provider/screens/profile_screen.dart'
     show ProfileScreen;
+import 'package:citysewa_provider/screens/verification_screen.dart'
+    show VerificationScreen;
 
 void main() {
   runApp(RootApp());
@@ -67,6 +69,7 @@ class RootApp extends StatelessWidget {
         '/register': (context) => SignupScreen(),
         '/home': (context) => HomeScreen(),
         '/profile': (context) => ProfileScreen(),
+        '/verify': (context) => VerificationScreen(),
       },
     );
   }
