@@ -1,11 +1,11 @@
+import 'package:citysewa_provider/api/models.dart';
 import "package:flutter/material.dart";
 
 import "package:citysewa_provider/widgets/widgets.dart" show AppLogo;
-import 'package:citysewa_provider/screens/signup_screen.dart' show SignupScreen;
-import 'package:citysewa_provider/screens/home_screen.dart' show HomeScreen;
 import 'package:citysewa_provider/api/api.dart' show AuthService;
+import 'package:citysewa_provider/session_manager.dart' show SessionManager;
 
-AuthService auth = AuthService();
+final authService = AuthService();
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({super.key});
@@ -23,19 +23,22 @@ class _LoginScreenState extends State<LoginScreen> {
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
           child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                AppLogo(size: 50),
-                SizedBox(height: 10),
-                WelcomeText(),
-                SizedBox(height: 20),
-                LoginForm(),
-                SizedBox(height: 20),
-                GoToSignup(),
-              ],
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AppLogo(size: 50),
+                  SizedBox(height: 10),
+                  WelcomeText(),
+                  SizedBox(height: 20),
+                  LoginForm(),
+                  SizedBox(height: 20),
+                  GoToSignup(),
+                ],
+              ),
             ),
           ),
         ),
@@ -66,7 +69,7 @@ class WelcomeText extends StatelessWidget {
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
-  _LoginFormState createState() => _LoginFormState();
+  State<LoginForm> createState() => _LoginFormState();
 }
 
 class _LoginFormState extends State<LoginForm> {
@@ -80,18 +83,23 @@ class _LoginFormState extends State<LoginForm> {
     setState(() {
       isLoading = true;
     });
-    try {
-      final result = await auth.login(email, password);
-      print("result: $result");
-      if (result != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
-      }
-    } catch (e) {
-      print("Error: $e");
+    LoginResponse result = await authService.login(email, password);
+
+    if (result.success) {
+      await SessionManager.saveUser(result.user!);
+      Navigator.pushReplacementNamed(context, '/home');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.green,
+          content: Center(child: Text(result.message)),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Center(child: Text(result.message))));
     }
+
     setState(() {
       isLoading = false;
     });
@@ -120,7 +128,6 @@ class _LoginFormState extends State<LoginForm> {
             obscureText: true,
             decoration: InputDecoration(
               hintText: "Password",
-
               prefixIcon: Icon(Icons.lock_outline),
             ),
           ),
@@ -140,7 +147,14 @@ class _LoginFormState extends State<LoginForm> {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(),
               child: isLoading
-                  ? CircularProgressIndicator(color: Colors.white)
+                  ? SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: Colors.white,
+                      ),
+                    )
                   : const Text(
                       "Login",
                       style: TextStyle(color: Colors.white, fontSize: 18),
@@ -149,22 +163,12 @@ class _LoginFormState extends State<LoginForm> {
                 final email = emailController.text.toString().trim();
                 final password = passController.text.toString().trim();
                 if (email.isNotEmpty && password.isNotEmpty) {
-                  login(
-                    emailController.text.toString(),
-                    passController.text.toString(),
-                  );
+                  login(email, password);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      backgroundColor: Colors.red,
                       content: Center(
-                        child: Text(
-                          "Ensure you entered correct credentials.",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
+                        child: Text("Please enter a valid email and password."),
                       ),
                     ),
                   );
@@ -189,10 +193,7 @@ class GoToSignup extends StatelessWidget {
         Text("Dont`t have an account? ", style: TextStyle(fontSize: 16)),
         InkWell(
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => SignupScreen()),
-            );
+            Navigator.pushNamed(context, '/register');
           },
           child: Text(
             "Sign Up",

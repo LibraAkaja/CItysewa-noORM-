@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:citysewa_provider/screens/login_screen.dart' show LoginScreen;
+import 'package:citysewa_provider/screens/signup_screen.dart' show SignupScreen;
 import 'package:citysewa_provider/screens/home_screen.dart' show HomeScreen;
+import 'package:citysewa_provider/screens/profile_screen.dart'
+    show ProfileScreen;
 
 void main() {
   runApp(RootApp());
@@ -14,7 +17,7 @@ class RootApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Citysewa Provider',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         fontFamily: 'Inter',
@@ -22,7 +25,7 @@ class RootApp extends StatelessWidget {
         appBarTheme: AppBarThemeData(
           backgroundColor: Colors.deepOrange,
           centerTitle: true,
-          toolbarHeight: kToolbarHeight,
+          toolbarHeight: 5,
         ),
         inputDecorationTheme: InputDecorationTheme(
           fillColor: Color(0xfffffefe),
@@ -49,9 +52,22 @@ class RootApp extends StatelessWidget {
             textStyle: TextStyle(fontSize: 18),
           ),
         ),
-        snackBarTheme: SnackBarThemeData(backgroundColor: Colors.deepOrange),
+        snackBarTheme: SnackBarThemeData(
+          backgroundColor: Colors.redAccent,
+          contentTextStyle: TextStyle(fontSize: 14, color: Colors.white),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
       ),
-      home: HomeScreen(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LoginScreen(),
+        '/register': (context) => SignupScreen(),
+        '/home': (context) => HomeScreen(),
+        '/profile': (context) => ProfileScreen(),
+      },
     );
   }
 }

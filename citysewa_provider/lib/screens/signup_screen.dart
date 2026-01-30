@@ -9,7 +9,7 @@ class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
 
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
 class _SignupScreenState extends State<SignupScreen> {
@@ -22,17 +22,20 @@ class _SignupScreenState extends State<SignupScreen> {
           constraints: BoxConstraints(maxWidth: 400),
           child: Padding(
             padding: EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AppLogo(size: 50),
-                SizedBox(height: 10),
-                WelcomeText(),
-                SizedBox(height: 20),
-                SignupForm(),
-                const SizedBox(height: 20),
-                GoToLogin(),
-              ],
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AppLogo(size: 50),
+                  SizedBox(height: 10),
+                  WelcomeText(),
+                  SizedBox(height: 20),
+                  SignupForm(),
+                  const SizedBox(height: 20),
+                  GoToLogin(),
+                ],
+              ),
             ),
           ),
         ),
@@ -63,7 +66,7 @@ class WelcomeText extends StatelessWidget {
 
 class SignupForm extends StatefulWidget {
   const SignupForm({super.key});
-  _SignupFormState createState() => _SignupFormState();
+  State<SignupForm> createState() => _SignupFormState();
 }
 
 class _SignupFormState extends State<SignupForm> {
@@ -81,15 +84,15 @@ class _SignupFormState extends State<SignupForm> {
   ) async {
     setState(() => isLoading = true);
 
-    try {
-      final result = await auth.register(fisrtName, lastName, email, password);
-      print("result: $result");
-      if (result != null) {
-        Navigator.pop(context);
-      }
-    } catch (e) {
-      print(e);
+    final result = await auth.register(fisrtName, lastName, email, password);
+
+    if (result.success) {
+      Navigator.pop(context);
     }
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Center(child: Text(result.message))));
+
     setState(() => isLoading = false);
   }
 
@@ -148,7 +151,14 @@ class _SignupFormState extends State<SignupForm> {
             width: double.infinity,
             child: ElevatedButton(
               child: isLoading
-                  ? CircularProgressIndicator(color: Colors.white)
+                  ? SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 3,
+                        color: Colors.white,
+                      ),
+                    )
                   : Text("Register"),
               onPressed: () {
                 final String firstName = firstNameController.text
@@ -165,21 +175,10 @@ class _SignupFormState extends State<SignupForm> {
                     lastName.isNotEmpty) {
                   signUp(firstName, lastName, email, password);
                 } else {
-                  String msg = "Please ensure that you filed form correctly.";
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      backgroundColor: Colors.red,
-                      content: Center(
-                        child: Text(
-                          msg,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
+                  String msg = "Please ensure that you filled form correctly.";
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Center(child: Text(msg))));
                 }
               },
             ),
