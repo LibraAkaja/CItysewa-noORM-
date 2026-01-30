@@ -184,8 +184,8 @@ class Table(ABC):
     
     #R
     def join(self, right_table, join_on:tuple, left_attrs:tuple, right_attrs:tuple, left_conditions:dict={}, right_conditions:dict={}):
-        if not isinstance(join_on, tuple):
-            raise TypeError("join_on parameter must be a tuple.")
+        if not all([isinstance(join_on, tuple), isinstance(left_attrs, tuple), isinstance(right_attrs, tuple), isinstance(left_conditions, dict), isinstance(right_conditions, dict)]):
+            raise TypeError("Arguments type mismatch.")
         
         if not hasattr(self, join_on[0]):
             raise ValueError(f"{self.__class__.__name__} has no attribute {join_on[0]}.")
@@ -198,8 +198,8 @@ class Table(ABC):
         for left in left_attrs:
             if not hasattr(self, left):
                 raise ValueError(f"{self.__class__.__name__} has no attribute {left}.")
-            
-        for right in right_attrs:            
+        
+        for right in right_attrs:  
             if not hasattr(right_table, right):
                 raise ValueError(f"{right_table.__class__.__name__} has no attribute {right}.")
            
