@@ -38,7 +38,7 @@ const Customers = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {customers.map((customer) => (
+                    {customers.slice().sort((a,b) => a.id - b.id).map((customer) => (
                         <tr key={customer.id}>
                             <td>{customer.id}</td>
                             <td>{customer.first_name}</td>
