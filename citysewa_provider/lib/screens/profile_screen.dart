@@ -200,8 +200,9 @@ class SettingsContainer extends StatelessWidget {
         children: [
           Text("Settings", style: TextStyle(color: Colors.grey, fontSize: 16)),
           SettingTab("Account", "/account_settings"),
-          SettingTab("Profile", "/profile_settings"),
           SettingTab("Address", "/address_settings"),
+          SettingTab("Profile", "/profile_settings"),
+          SettingTab("Payment", "/payment_settings"),
         ],
       ),
     );

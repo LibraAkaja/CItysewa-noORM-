@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.miscellaneous_services_rounded),
             label: "Services",
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+          // BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
       ),
     );
@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class ProfileIcon extends StatelessWidget {
-  ProfileIcon({super.key});
+  const ProfileIcon({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +91,7 @@ class ProfileIcon extends StatelessWidget {
 }
 
 class BookingSection extends StatefulWidget {
-  BookingSection({super.key});
+  const BookingSection({super.key});
 
   @override
   State<BookingSection> createState() => _BookingSectionState();
@@ -103,13 +103,13 @@ class _BookingSectionState extends State<BookingSection> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 212, 234, 249),
+        color: const Color.fromARGB(255, 205, 232, 249),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withAlpha(30),
             blurRadius: 14,
-            offset: const Offset(0, 6),
+            offset: const Offset(0, 3),
           ),
         ],
       ),
