@@ -5,6 +5,10 @@ const Providers = () => {
     const [providers, setProviders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [searchBy, setSearchBy] = useState("Id");
+    const handleChange = (e) => {
+        setSearchBy(e.target.value);
+    };
 
     useEffect(()=>{
         const loadProviders = async () => {
@@ -27,6 +31,13 @@ const Providers = () => {
     return(
         <section className="providers">
             <h2>Providers</h2>
+            <input type="text" placeholder={`Search by ${searchBy}`} id="searchBar"/>
+            <select value={searchBy} name="searchBy" onChange={handleChange}>
+                <option disabled hidden value={""}>Search by</option>
+                <option value={"Id"}>Id</option>
+                <option value={"First Name"}>First Name</option>
+                <option value={"Last Name"}>Last Name</option>
+            </select>
             <table>
                 <thead>
                     <tr>
