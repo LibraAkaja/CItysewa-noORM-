@@ -1,5 +1,5 @@
 import secrets
-import uuid
+
 from django.contrib.auth.hashers import make_password, check_password
 
 from src.core.db_manager import Table
@@ -14,8 +14,8 @@ class Token(Table):
     required_fields = ["user_id", "token"]
     
     def __init__(self):
-        super().__init__()
         self._attrs.update(super()._attrs)
+        super().__init__()
         
     @staticmethod 
     def abstract_method():
@@ -45,8 +45,8 @@ class User(Table):
     required_fields = ['email', 'password']
         
     def __init__(self):
-        super().__init__()
-        self._attrs.update(super()._attrs)
+        self._attrs.update(super()._attrs)        
+        super().__init__()        
        
     @staticmethod 
     def abstract_method():
@@ -90,8 +90,8 @@ class Customer(Table):
     required_fields = ['user_id']
     
     def __init__(self):
-        super().__init__()
         self._attrs.update(super()._attrs)
+        super().__init__()
        
     @staticmethod 
     def abstract_method():
@@ -126,8 +126,8 @@ class Provider(Table):
     required_fields = ['user_id']
     
     def __init__(self):
-        super().__init__()
         self._attrs.update(super()._attrs)
+        super().__init__()
        
     @staticmethod 
     def abstract_method():
@@ -160,8 +160,8 @@ class Document(Table):
     required_fields = ['provider_id', 'document_type', 'document_number', 'file_name']
     
     def __init__(self):
-        super().__init__()
         self._attrs.update(super()._attrs)
+        super().__init__()
        
     @staticmethod 
     def abstract_method():

@@ -73,7 +73,8 @@ class Table(ABC):
     }
     
     def __init__(self):
-        pass
+        for key in self._attrs.keys():
+            self.__setattr__(key, None)
     
     @abstractmethod
     def abstract_method(self):
@@ -81,7 +82,7 @@ class Table(ABC):
         pass
     
     def __setattr__(self, key, value):
-        if key in self._attrs and not isinstance(value, self._attrs[key]):
+        if value and key in self._attrs and not isinstance(value, self._attrs[key]):
             raise TypeError(f"{key} must be {self._attrs[key].__name__}")
         return super().__setattr__(key, value)
            
@@ -181,6 +182,9 @@ class Table(ABC):
             print(f"Error: {e}")
             return
         
+    def join(self, table, join_on:tuple, left_attr:tuple, right_attr:tuple):
+        left_columns = ", ".join(f"X.{attr}" for attr in left_attr)
+        query = f"SELECT X. FROM {self.table_name} as X JOIN {table} as Y ON X.{join_on[0]} = Y.{join_on[1]};"
     #U  
     def update(self, **kwargs):
         if kwargs.get("id") is None:
