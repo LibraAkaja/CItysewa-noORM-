@@ -183,7 +183,7 @@ class Table(ABC):
             return
     
     #R
-    def join(self, right_table, join_on:tuple, left_attrs:tuple, right_attrs:tuple):
+    def join(self, right_table, join_on:tuple, left_attrs:tuple, right_attrs:tuple, left_conditions:dict={}, right_conditions:dict={}):
         if not isinstance(join_on, tuple):
             raise TypeError("join_on parameter must be a tuple.")
         
@@ -195,19 +195,42 @@ class Table(ABC):
         if not all(isinstance(item, str) for item in join_on):
             raise TypeError("join attributes must be string.")
         
-        for left, right in zip(left_attrs, right_attrs):
+        for left in left_attrs:
             if not hasattr(self, left):
                 raise ValueError(f"{self.__class__.__name__} has no attribute {left}.")
+            
+        for right in right_attrs:            
             if not hasattr(right_table, right):
                 raise ValueError(f"{right_table.__class__.__name__} has no attribute {right}.")
+           
+        for left_con in left_conditions:
+            if not hasattr(self, left_con):
+                raise ValueError(f"{self.__class__.__name__} has no attribute {left_con}.")
+            
+        for right_con in right_conditions:            
+            if not hasattr(right_table, right_con):
+                raise ValueError(f"{right_table.__class__.__name__} has no attribute {right_con}.")
             
         left_columns = ", ".join(f"X.{attr}" for attr in left_attrs)
         right_columns = ", ".join(f"Y.{attr}" for attr in right_attrs)
-        query = f"SELECT {left_columns}, {right_columns} FROM {self.table_name} as X JOIN {right_table.table_name} as Y ON X.{join_on[0]} = Y.{join_on[1]};"
+        query = f"SELECT {left_columns}, {right_columns} FROM {self.table_name} as X JOIN {right_table.table_name} as Y ON X.{join_on[0]} = Y.{join_on[1]}"
         
+        values = ()
+        if len(left_conditions)>0 or len(right_conditions)>0:
+            where_clause_left = [f"X.{col} = %s" for col in left_conditions]
+            values_left_con = tuple(left_conditions.values())
+            
+            where_clause_right = [f"Y.{col} = %s" for col in right_conditions]
+            values_right_con = tuple(right_conditions.values())
+            
+            where_clause = " AND ".join([*where_clause_left, *where_clause_right])
+            query = f"{query} WHERE {where_clause}"
+            
+            values = (*values_left_con, *values_right_con)
+            
         try:
             with connection.cursor() as cursor:
-                cursor.execute(query)
+                cursor.execute(query, values)
                 result = cursor.fetchall()
                 return result
         except Exception as e:
