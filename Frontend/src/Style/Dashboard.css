@@ -29,7 +29,7 @@
     background: rgba(17, 17, 17, 0.15);
 }
 
-.admin-dashboard .customers, .providers{
+.customers, .providers{
     /* border: 2px solid red; */
     margin-top: 25px;
     width: 100%;
@@ -59,6 +59,11 @@ th,td{
 
 .admin-dashboard input{
     border: 2px solid rgba(102, 102, 102, 0.75);
+    margin-top: 13px;
+}
+
+.admin-dashboard select{
+    margin-top: 8px;
 }
 
 @media only screen and (min-width: 768px){

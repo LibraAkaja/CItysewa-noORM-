@@ -6,6 +6,16 @@ const Providers = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchBy, setSearchBy] = useState("Id");
+    const [shownIndex, setShownIndex] = useState(0);
+    const PAGE_SIZE = 10;
+    const providersOnDisplay = providers.slice(shownIndex, shownIndex + PAGE_SIZE);
+    // Functions that show records on the table
+    const showNextBatch = () => {
+        setShownIndex(prev => prev + PAGE_SIZE < providers.length ? prev + PAGE_SIZE : prev);
+    };
+    const showPrevBatch = () => {
+        setShownIndex(prev => prev - PAGE_SIZE >= 0 ? prev - PAGE_SIZE : 0);
+    };
     const handleChange = (e) => {
         setSearchBy(e.target.value);
     };
@@ -14,7 +24,8 @@ const Providers = () => {
         const loadProviders = async () => {
             try{
                 const response = await fetchProviders();
-                setProviders(response.data);
+                const sortedProviders = response.data.slice().sort((a,b) => a.id - b.id);
+                setProviders(sortedProviders);
             } catch (e) {
                 setError("Failed to fetch providers");
                 console.error(e);
@@ -49,7 +60,7 @@ const Providers = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {providers.slice().sort((a,b) => a.id - b.id).map((provider) => (
+                    {providersOnDisplay.map(provider => (
                         <tr key={provider.id}>
                             <td>{provider.id}</td>
                             <td>{provider.first_name}</td>
@@ -60,6 +71,7 @@ const Providers = () => {
                     ))}
                 </tbody>  
             </table>
+            <span style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly',marginTop:'8px'}}><p style={{opacity: shownIndex === 0 ? '0.5' : '1'}} onClick={showPrevBatch}>Prev</p><p style={{opacity: shownIndex + PAGE_SIZE >= providers.length ? '0.5' : '1'}} onClick={showNextBatch}>Next</p></span>
         </section>
     );
 };

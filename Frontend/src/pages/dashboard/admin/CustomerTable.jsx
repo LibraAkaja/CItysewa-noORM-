@@ -6,6 +6,20 @@ const Customers = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [searchBy, setSearchBy] = useState("Id");
+    const [shownIndex, setShownIndex] = useState(0);
+    const PAGE_SIZE = 10;
+    const customersOnDisplay = customers.slice(shownIndex, shownIndex + PAGE_SIZE);
+    // Functions that show records on the table
+    const showNextBatch = () => {
+        setShownIndex(prev => prev + PAGE_SIZE < customers.length ? prev + PAGE_SIZE : prev);
+    };
+    const showPrevBatch = () => {
+        setShownIndex(prev => prev - PAGE_SIZE >= 0 ? prev - PAGE_SIZE : 0);
+    };
+    // const showAll = () => {
+
+    // };
+
     const handleChange = (e) => {
         setSearchBy(e.target.value);
     };
@@ -14,7 +28,8 @@ const Customers = () => {
         const loadCustomers = async () => {
             try{
                 const response = await fetchCustomers();
-                setCustomers(response.data);
+                const sortedCustomers = response.data.slice().sort((a,b)=> a.id - b.id);
+                setCustomers(sortedCustomers);
             } catch (e) {
                 setError("Failed to fetch customers");
                 console.error(e);
@@ -49,7 +64,7 @@ const Customers = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {customers.slice().sort((a,b) => a.id - b.id).map((customer) => (
+                    {customersOnDisplay.map(customer => (
                         <tr key={customer.id}>
                             <td>{customer.id}</td>
                             <td>{customer.first_name}</td>
@@ -60,6 +75,7 @@ const Customers = () => {
                     ))}
                 </tbody>  
             </table>
+            <span style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly',marginTop:'8px'}}><p style={{opacity: shownIndex === 0 ? '0.5' : '1'}} onClick={showPrevBatch}>Prev</p><p style={{opacity: shownIndex + PAGE_SIZE >= customers.length ? '0.5' : '1'}} onClick={showNextBatch}>Next</p></span>
         </section>
     );
 };
