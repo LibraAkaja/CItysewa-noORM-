@@ -15,6 +15,9 @@ from .messages import (
     PROVIDER_PROFILE_EXISTS,
     INVALID_PASSWORD,
     USER_NOT_FOUND,
+    CUSTOMER_NOT_FOUND,
+    DOCUMENT_NOT_FOUND,
+    PROVIDER_NOT_FOUND,
     CUSTOMER_PROFILE_DOES_NOT_EXIST,
     PROVIDER_PROFILE_DOES_NOT_EXIST,
     ADMIN_ACCESS_DENIED,
@@ -338,7 +341,7 @@ class DocumentCreateSerializer(serializers.Serializer):
     
     def create(self, validated_data):     
         document = validated_data.pop("document", None)       
-        if not document:                             
+        if document is None:                             
             provider_id = validated_data.get("provider_id")      
             file = validated_data.pop("file", None)
             file_name = Document().upload_file(provider_id, file)
@@ -347,7 +350,7 @@ class DocumentCreateSerializer(serializers.Serializer):
             
         return {**document.__dict__}
     
-class ProviderVerificationSerializer(serializers.Serializer):
+class ProviderSubmitVerificationSerializer(serializers.Serializer):
     id = serializers.IntegerField(required=True)
     phone_number = serializers.CharField(required=True, validators = [validate_phone_number])
     document_type = serializers.CharField(required=True)
@@ -414,3 +417,57 @@ class VerificationListSerializer(serializers.Serializer):
     last_name = serializers.CharField(required=True)
     document_number = serializers.CharField(required=True)
     status = serializers.CharField(required=True)
+    
+class VerificationRetrieveSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=True)
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
+    gender = serializers.CharField(required=True)
+    photo = serializers.CharField(required=True)
+    verified = serializers.BooleanField(required=True)
+    document_type = serializers.CharField(required=True)
+    document_number = serializers.CharField(required=True)
+    file_name = serializers.CharField(required=True)
+    status = serializers.CharField(required=True)
+
+    
+class VerificationPatchSerializer(serializers.Serializer):
+    verified = serializers.BooleanField(required=True)
+    document_number = serializers.CharField(required=True)
+    status = serializers.CharField(required=True)
+   
+    def validate(self, attrs):
+        provider_id = self.instance["id"]
+        provider = Provider().get(id=provider_id)
+        if provider:            
+            document_number  = attrs.get("document_number")
+            document = Document().get(document_number=document_number)
+            if not document:
+                raise serializers.ValidationError({
+                    "message": DOCUMENT_NOT_FOUND,
+                })    
+        else:
+            raise serializers.ValidationError({
+                "message": PROVIDER_NOT_FOUND
+            })    
+             
+        attrs["document_id"] = document.id      
+        return attrs
+    
+    def update(self, instance, validated_data):
+        provider_id =  instance.get("id")
+        document_id = validated_data.get("document_id")
+        verified = validated_data.get("verified")
+        document_status = validated_data.get("status")
+        
+        Provider().update(id=provider_id, verified=verified)
+        Document().update(id=document_id, status=document_status)
+        
+        updated_provider = Provider().get(id=provider_id)
+        
+        return {
+            "id": updated_provider.id,
+            "first_name": updated_provider.first_name,
+            "last_name": updated_provider.last_name,
+            "verified": updated_provider.verified
+            }

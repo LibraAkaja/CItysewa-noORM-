@@ -144,6 +144,10 @@ class Provider(Table):
         else:
             raise ValueError("Id missing for this instance.") 
         
+    def get_photo_url(self, id:int, photo_name:str):
+        photo_url =Storage().get_file_link(bucket='provider', file_path=f'photos/{id}/{photo_name}')
+        return photo_url
+        
     def delete_photo(self):
         if hasattr(self, "photo"):
             Storage().delete_file(bucket="provider", folder=f"photos/{self.id}", file_name=self.photo)
@@ -174,8 +178,11 @@ class Document(Table):
                 file=file
             )
         return file_name    
-             
+    
+    def get_file_url(self, provider_id:int, file_name):
+        document_url =Storage().get_file_link(bucket='provider', file_path=f'documents/{provider_id}/{file_name}')
+        return document_url         
 
 if __name__ == "__main__":
-    print(Customer().all())
+    print(User().all())
     

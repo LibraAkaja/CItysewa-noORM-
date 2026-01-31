@@ -1,7 +1,4 @@
-import os
-from pathlib import Path
 import uuid
-
 
 from django.conf import settings
 
@@ -11,6 +8,10 @@ from botocore.client import Config
 
 class Storage:
     def __init__(self):
+        self.access_key_id = settings.SUPABASE_S3_ACCESS_KEY_ID
+        self.access_secret_key = settings.SUPABASE_S3_SECRET_ACCESS_KEY
+        self.region_name = settings.SUPABASE_S3_REGION_NAME
+        self.endpoint_url = settings.SUPABASE_S3_ENDPOINT_URL
         self.available_buckets = {
             "provider": settings.SUPABASE_S3_PROVIDER_BUCKET_NAME,
             "customer": settings.SUPABASE_S3_CUSTOMER_BUCKET_NAME,
@@ -20,10 +21,10 @@ class Storage:
         try:
             s3 = boto3.client(
                 "s3",
-                aws_access_key_id = settings.SUPABASE_S3_ACCESS_KEY_ID,
-                aws_secret_access_key = settings.SUPABASE_S3_SECRET_ACCESS_KEY,
-                region_name = settings.SUPABASE_S3_REGION_NAME,
-                endpoint_url = settings.SUPABASE_S3_ENDPOINT_URL,
+                aws_access_key_id = self.access_key_id,
+                aws_secret_access_key = self.access_secret_key,
+                region_name = self.region_name,
+                endpoint_url = self.endpoint_url,
                 config = Config(
                     signature_version = "s3v4",
                     s3 = {"addressing_style": "path"}
@@ -72,3 +73,8 @@ class Storage:
             )
         except Exception as e:
             print(f"Error: {e}")
+            
+    def get_file_link(self, bucket, file_path):
+        path = self.endpoint_url.rstrip("/s3")
+        return f"{path}/object/public/{bucket}/{file_path}"
+        
