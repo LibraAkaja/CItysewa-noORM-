@@ -92,12 +92,15 @@ class Table(ABC):
             if key not in kwargs.keys():
                 raise TypeError(f"Missing required field: {key}")
        
+        columns = []
+        values = [] 
         for key, value in kwargs.items():
             if key in self._attrs and key not in self.read_only_fields:
-                self.__setattr__(key, value)
-                
-        cols = ", ".join(list(self.__dict__.keys()))
-        vals = tuple(self.__dict__.values())
+                columns.append(key)
+                values.append(value)
+                                
+        cols = ", ".join(columns)
+        vals = tuple(values)
         placeholders = ", ".join(['%s' for _ in vals])
         
         query = f"INSERT INTO {self.table_name} ({cols}) VALUES ({placeholders});"        
@@ -106,14 +109,14 @@ class Table(ABC):
                 cursor.execute(query, vals)
             connection.commit()
             print(f"Record inserted successfully in the {self.table_name}.")
-            return self.get(**self.__dict__)
+            return self.get(**kwargs)
         except Exception as e:
             print(f"Error: {e}")
             return   
     
     #R         
     def get(self, **kwargs):        
-        cols = [col for col in kwargs.keys() if col in self._attrs]
+        cols = [col for col in kwargs if col in self._attrs]
         if len(kwargs) == 0 or len(cols) == 0:
             raise ValueError("Atleast a valid column is required for searching rows.")
         
@@ -132,8 +135,7 @@ class Table(ABC):
                         if value is not None:
                             obj.__setattr__(col, value)
                     return obj
-                return result
-            
+                           
         except Exception as e:
             print(f"Error: {e}")
             return None
