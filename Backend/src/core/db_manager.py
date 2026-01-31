@@ -173,8 +173,7 @@ class Table(ABC):
             with connection.cursor() as cursor:
                 cursor.execute(query)
                 rows = cursor.fetchall()
-                cols = ["id", *self._attrs.keys()]
-                cols.pop(-3) # removed id key from last
+                cols = [col[0] for col in cursor.description]
                 result = [dict(zip(cols, row)) for row in rows]                
                 return result                
             
@@ -211,8 +210,8 @@ class Table(ABC):
             if not hasattr(right_table, right_con):
                 raise ValueError(f"{right_table.__class__.__name__} has no attribute {right_con}.")
             
-        left_columns = ", ".join(f"X.{attr}" for attr in left_attrs)
-        right_columns = ", ".join(f"Y.{attr}" for attr in right_attrs)
+        left_columns = ", ".join(f"X.{attr} as {self.table_name.rstrip("s")}_{attr}" for attr in left_attrs)
+        right_columns = ", ".join(f"Y.{attr} as {right_table.table_name.rstrip("s")}_{attr}" for attr in right_attrs)
         query = f"SELECT {left_columns}, {right_columns} FROM {self.table_name} as X JOIN {right_table.table_name} as Y ON X.{join_on[0]} = Y.{join_on[1]}"
         
         values = ()
@@ -231,7 +230,9 @@ class Table(ABC):
         try:
             with connection.cursor() as cursor:
                 cursor.execute(query, values)
-                result = cursor.fetchall()
+                rows = cursor.fetchall()
+                cols = [col[0] for col in cursor.description]
+                result = [dict(zip(cols, row)) for row in rows]
                 return result
         except Exception as e:
             print(f"Error: {e}")
