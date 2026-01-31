@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
+// import {jwtDecode} from "jwt-decode";
 
 // 1. Create AuthContext
 const AuthContext = createContext(null);
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('dummyUser');
   };
 
-  // ✅ Return JSX inside the provider
+  // Return JSX inside the provider
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}

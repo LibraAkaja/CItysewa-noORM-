@@ -4,5 +4,5 @@ export default [
     {label: 'Bookings', path: ''},
     {label: 'Earnings', path: ''},
     {label: 'Reviews', path: ''},
-    {label: 'Profile', path: ''},
+    {label: 'Profile', path: '/provider/profile'},
 ];
