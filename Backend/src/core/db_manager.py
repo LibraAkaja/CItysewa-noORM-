@@ -112,12 +112,11 @@ class Table(ABC):
             return   
     
     #R         
-    def get(self, **kwargs):
-        if len(kwargs) == 0:
-            print("Atleast a field is required for searching rows.")
-            return
-        
+    def get(self, **kwargs):        
         cols = [col for col in kwargs.keys() if col in self._attrs]
+        if len(kwargs) == 0 or len(cols) == 0:
+            raise ValueError("Atleast a valid column is required for searching rows.")
+        
         values = tuple(kwargs[col] for col in cols)
         condition = " AND ".join([f'{col} = %s' for col in cols])
         query = f"SELECT * FROM {self.table_name} WHERE {condition};"
