@@ -11,7 +11,7 @@ from .views import (
     ProviderLoginAPIView,
     ProviderListAPIView,
     ProviderRetrieveAPIView,
-    ProviderVerificationAPIView,
+    ProviderSubmitVerificationAPIView,
     VerificationListAPIView,
     VerificationRetrieveAPIView,
 )
@@ -28,7 +28,7 @@ urlpatterns= [
     path('provider/login', ProviderLoginAPIView.as_view(), name="provider-login"),
     path('provider', ProviderListAPIView.as_view(), name="provider-list"),
     path('provider/<int:id>', ProviderRetrieveAPIView.as_view(), name="provider-retrieve"),
-    path('provider/submit-verification', ProviderVerificationAPIView.as_view(), name="provider-submit-verification"),
+    path('provider/submit-verification', ProviderSubmitVerificationAPIView.as_view(), name="provider-submit-verification"),
     
     path("provider/verification-data", VerificationListAPIView.as_view(), name="verification-data-list"),
     path("provider/verification-data/<int:id>", VerificationRetrieveAPIView.as_view(), name="verification-data-retrieve"),

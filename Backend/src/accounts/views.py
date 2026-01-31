@@ -23,9 +23,10 @@ from .serializers import (
     ProviderRegisterSerializer,
     ProviderLoginSerializer,
     ProviderSerializer,
-    ProviderVerificationSerializer,
+    ProviderSubmitVerificationSerializer,
     VerificationListSerializer,
     VerificationRetrieveSerializer,
+    VerificationPatchSerializer,
 )
 
 
@@ -142,9 +143,9 @@ class ProviderRetrieveAPIView(APIView):
         return Response({"detail": "Not found"}, status=HTTP_404_NOT_FOUND)
     
     
-class ProviderVerificationAPIView(APIView):
+class ProviderSubmitVerificationAPIView(APIView):
     def post(self, request):
-        serializer = ProviderVerificationSerializer(data=request.data)
+        serializer = ProviderSubmitVerificationSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.save()
             return Response(data=data, status=HTTP_200_OK)
@@ -202,3 +203,11 @@ class VerificationRetrieveAPIView(APIView):
         serializer = VerificationRetrieveSerializer(transformed_data)
         
         return Response(serializer.data, status=HTTP_200_OK)
+    
+    def patch(self, request, id):
+        provider_id = id
+        serializer = VerificationPatchSerializer(data=request.data, instance={"id": provider_id})
+        if serializer.is_valid():
+            data = serializer.save()
+            return Response(data=data, status=HTTP_200_OK)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)

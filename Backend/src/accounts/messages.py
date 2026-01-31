@@ -1,6 +1,10 @@
 INVALID_PASSWORD = "Password is incorrect."
 
 USER_NOT_FOUND = "No account associated with this email."
+CUSTOMER_NOT_FOUND = "Customer not found."
+PROVIDER_NOT_FOUND = "Provider not found."
+DOCUMENT_NOT_FOUND = "Document not found."
+
 CUSTOMER_PROFILE_DOES_NOT_EXIST = "No customer profile associated with this email."
 PROVIDER_PROFILE_DOES_NOT_EXIST = "No provider profile associated with this email."
 
