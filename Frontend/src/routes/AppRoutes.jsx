@@ -42,6 +42,9 @@ import CustomerLayout from '../layouts/CustomerLayout';
 import AdminLayout from '../layouts/AdminLayout';
 import ProviderLayout from '../layouts/ProviderLayout';
 
+// Import protected route
+import ProtectedRoute from './ProtectedRoute.jsx';
+
 const AppRoutes = ()=> (
     <Router>
         <Routes>
@@ -64,8 +67,8 @@ const AppRoutes = ()=> (
             </Route>
 
             {/* Protected Routes for After Login */}
-            {/* <Route element={<BaseLayout/>}> */}
 
+            <Route element={<ProtectedRoute allowedRoles={["customer"]} />}>
                 <Route element={<CustomerLayout/>}>
                     <Route path='/customer' element={<CustomerDashboard/>}/>
                     {/* <Route path='/customer/bookings' element={<Bookings/>}/> */}
@@ -75,7 +78,9 @@ const AppRoutes = ()=> (
                     <Route path='/customer/addresses/new' element={<AddressForm/>}/>
                     <Route path='/customer/profile' element={<CustomerProfile/>}/>
                 </Route>
-                
+            </Route>
+            
+            <Route element={<ProtectedRoute allowedRoles={["provider"]} />}>
                 <Route element={<ProviderLayout/>}>
                     <Route path='/provider' element={<ProviderDashboard/>}/>
                     <Route path='/provider/services' element={<Services/>}/>
@@ -84,15 +89,16 @@ const AppRoutes = ()=> (
                     {/* <Route path='/provider/bookings' element={<Bookings/>}/> */}
                     <Route path='/provider/profile' element={<ProviderProfile/>}/>
                 </Route>
+            </Route>
 
+            <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
                 <Route element={<AdminLayout/>}>
                     <Route path='/admin' element={<AdminDashboard/>}/>
                     {/* <Route path='/admin/bookings' element={<Bookings/>}/> */}
                     <Route path='/admin/users' element={<CustomerProfile/>}/>
                     <Route path='/admin/services' element={<Services/>}/>
                 </Route>
-            
-            {/* </Route> */}
+            </Route>
 
             {/* Fallback */}
             <Route path='*' element={<NotFound/>}/>
